@@ -21,8 +21,9 @@ class Pypykatz(common.WindowsCommandPlugin):
 	__name = "pypykatz"
 
 	__args = [
-		dict(name="override_timestamp", type="int", required=False,
-			 help="The msv dll file timestamp detection fails in some cases."),
+		
+		dict(name="buildnumber", type="int", required=False,
+			 help="BuildNumber value of the OS, overrides automatice search for buildnumber"),
 
 		dict(name="out_file", required=False,
 			 help="The file name to write."),
@@ -32,6 +33,9 @@ class Pypykatz(common.WindowsCommandPlugin):
 
 		dict(name="json", required=False, type="bool",
 			 help="Write credentials to file in JSON format"),
+
+		dict(name="override_timestamp", type="int", required=False,
+			 help="The msv dll file timestamp detection fails in some cases."),
 
 	]
 
@@ -53,7 +57,7 @@ class Pypykatz(common.WindowsCommandPlugin):
 
 	def collect(self):
 		cc = self.session.plugins.cc()
-		mimi = pypykatz.go_rekall(self.session, self.plugin_args.override_timestamp)
+		mimi = pypykatz.go_rekall(self.session, self.plugin_args.override_timestamp, self.plugin_args.buildnumber)
 
 		if self.plugin_args.out_file and self.plugin_args.json:
 			self.session.logging.info('Dumping results to file in JSON format')
